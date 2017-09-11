@@ -1,3 +1,9 @@
+/* As I understand, this class is _not_ needed for the implementation
+ * I've chosen to keep it here as I don't really know 
+ * whether I should've kept it or deleted it
+ * Please delete this if it was not necessary
+ * The main method consists of some basic tests */
+
 package ru.spbau.group202.sharkova;
 
 public class Main {
