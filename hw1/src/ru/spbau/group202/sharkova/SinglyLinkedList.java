@@ -82,8 +82,6 @@ public class SinglyLinkedList {
             return null;
         }
 
-
-
         Node cur = head;
 
         while (cur.getNext().getNext() != null

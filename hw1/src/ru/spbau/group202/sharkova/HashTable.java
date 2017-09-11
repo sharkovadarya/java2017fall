@@ -88,7 +88,6 @@ public class HashTable {
      * @return current amount of entries in the table.
      */
     public int size() {
-
         return size;
     }
 

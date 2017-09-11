@@ -23,7 +23,6 @@ public class Node {
      * @return the data stored inside the node.
      */
     public HashTableEntry getData() {
-
         return data;
     }
 
@@ -31,7 +30,6 @@ public class Node {
      * @param newData new data to be stored instead of the current data.
      */
     public void setData(HashTableEntry newData) {
-
         data = newData;
     }
 
@@ -39,7 +37,6 @@ public class Node {
      * @return next node.
      */
     public Node getNext() {
-
         return next;
     }
 
@@ -48,7 +45,6 @@ public class Node {
      *                instead of the current one.
      */
     public void setNext(Node newNext) {
-
         next = newNext;
     }
 
