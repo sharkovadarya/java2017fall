@@ -103,21 +103,9 @@ public class SinglyLinkedList {
      */
     public void clear() {
 
-        if (head == null) {
-            return;
-        }
-
-        if (head.getNext() == null) {
-            head = null;
-            return;
-        }
-
-        Node tmp = head.getNext();
-        while (tmp.getNext() != null) {
-            head.setNext(tmp.getNext());
-            tmp.setNext(null);
-            tmp = head.getNext();
-        }
+        /* Java has automatic garbage collection
+         * so simply setting the list's head to null should be legit */
+        head = null;
     }
 
 }
