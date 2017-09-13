@@ -2,6 +2,7 @@ package ru.spbau.group202.sharkova;
 
 /**
  * This class represents a closed addressing hash table.
+ * Collisions are resolved by chaining.
  * It is possible to insert new elements, get elements by key,
  * remove elements by key, remove all elements,
  * check whether the element of the given key is in the table,
@@ -31,6 +32,15 @@ public class HashTable {
     // the hash table is an array of linked lists which store entries
     private SinglyLinkedList hashTable[];
 
+
+    /**
+     * @param string string the hash value of which will be found.
+     * @return hash value of the given string fit for the table.
+     */
+    private int getHashValue(String string) {
+        return (string.hashCode() & 0x7fffffff) % tableSize;
+    }
+
     /**
      * Empty hash table constructor.
      * Each cell is initialized
@@ -47,18 +57,6 @@ public class HashTable {
         size = 0;
     }
 
-    /**
-     * @param string string the hash value of which will be found.
-     * @return hash value of the given string fit for the table.
-     */
-    private int getHashValue(String string) {
-        return (string.hashCode() & 0x7fffffff) % tableSize;
-    }
-
-    /**
-     * @param key key of the entry to be found.
-     * @return value of the entry with the given key.
-     */
     public String get(String key) {
         int hash = getHashValue(key);
         HashTableEntry entry = hashTable[hash].get(key);
@@ -88,20 +86,18 @@ public class HashTable {
         }
         size = 0;
 
-        for (int i = 0; i < oldHashTable.length; i++) {
-            if (oldHashTable[i].getSize() != 0) {
+        for (SinglyLinkedList list : oldHashTable) {
+            if (list.getSize() != 0) {
                 int index = 0;
-                HashTableEntry entry = oldHashTable[i].getByIndex(index);
+                HashTableEntry entry = list.getByIndex(index);
                 while (entry != null) {
                     /* Since rehashing takes place,
                      * we need to put all entries in again */
                     put(entry.getKey(), entry.getValue());
-                    entry = oldHashTable[i].getByIndex(++index);
+                    entry = list.getByIndex(++index);
                 }
             }
         }
-
-
     }
 
     /**

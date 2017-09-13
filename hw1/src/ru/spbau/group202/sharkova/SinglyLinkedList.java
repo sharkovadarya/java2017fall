@@ -3,7 +3,9 @@ package ru.spbau.group202.sharkova;
 /**
  * This class represents a singly-linked list of hash table entries
  * which allows to add new elements,
- * get elements by key and delete elements by key.
+ * get elements by key, delete elements by key,
+ * remove all elements, get elements by index,
+ * get the size of the list.
  */
 public class SinglyLinkedList {
 
@@ -38,11 +40,11 @@ public class SinglyLinkedList {
         if (head == null) {
             head = tmp;
         } else {
-            while (cur.getNext() != null) {
-                cur = cur.getNext();
+            while (cur.next != null) {
+                cur = cur.next;
             }
 
-            cur.setNext(tmp);
+            cur.next = tmp;
         }
 
         size++;
@@ -59,15 +61,15 @@ public class SinglyLinkedList {
             return null;
         }
 
-        while (cur.getNext() != null && !cur.getData().getKey().equals(key)) {
-            cur = cur.getNext();
+        while (cur.next != null && !cur.data.getKey().equals(key)) {
+            cur = cur.next;
         }
 
-        if (!cur.getData().getKey().equals(key)) {
+        if (!cur.data.getKey().equals(key)) {
             return null;
         }
 
-        return cur.getData();
+        return cur.data;
     }
 
     /**
@@ -79,9 +81,9 @@ public class SinglyLinkedList {
             return null;
         }
 
-        if (head.getData().getKey().equals(key)) {
-            String returnValue = head.getData().getValue();
-            head = head.getNext();
+        if (head.data.getKey().equals(key)) {
+            String returnValue = head.data.getValue();
+            head = head.next;
             return returnValue;
         }
 
@@ -89,20 +91,20 @@ public class SinglyLinkedList {
          * so if the head is the last element,
          * we haven't found the needed element and return null
          */
-        if (head.getNext() == null) {
+        if (head.next == null) {
             return null;
         }
 
         Node cur = head;
 
-        while (cur.getNext().getNext() != null
-               && !cur.getNext().getData().getKey().equals(key)) {
-            cur = cur.getNext();
+        while (cur.next.next != null
+               && !cur.next.data.getKey().equals(key)) {
+            cur = cur.next;
         }
 
-        if (cur.getNext().getData().getKey().equals(key)) {
-            String returnValue = cur.getNext().getData().getValue();
-            cur.setNext(cur.getNext().getNext());
+        if (cur.next.data.getKey().equals(key)) {
+            String returnValue = cur.next.data.getValue();
+            cur.next = cur.next.next;
             size--;
             return returnValue;
         }
@@ -130,13 +132,13 @@ public class SinglyLinkedList {
      */
     public HashTableEntry getByIndex(int index) {
         if (index == 0) {
-            return head.getData();
+            return head.data;
         }
 
         Node cur = lastIndex <= index ? lastNode : head;
         int currentIndex = lastIndex < index ? lastIndex : 0;
-        while (cur.getNext() != null && currentIndex < index) {
-            cur = cur.getNext();
+        while (cur.next != null && currentIndex < index) {
+            cur = cur.next;
             currentIndex++;
         }
 
@@ -147,7 +149,7 @@ public class SinglyLinkedList {
         lastIndex = index;
         lastNode = cur;
 
-        return cur.getData();
+        return cur.data;
     }
 
     /**
@@ -155,6 +157,25 @@ public class SinglyLinkedList {
      */
     public int getSize() {
         return size;
+    }
+
+    /** This class represents a linked list node;
+     * stores given data; can go to the next node in the list.
+     */
+    class Node {
+
+        private Node next;
+        private HashTableEntry data;
+
+        /**
+         * Node constructor.
+         * Next node does not exist yet so it's value will be null.
+         * @param info data that will be stored in the node.
+         */
+        public Node(HashTableEntry info) {
+            next = null;
+            data = info;
+        }
     }
 
 }
