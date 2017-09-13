@@ -8,8 +8,25 @@ package ru.spbau.group202.sharkova;
  * get an amount of all keys in the table.
  * */
 public class HashTable {
-    private final static int TABLE_SIZE = 257;
+
+    /* The table has a maximal acceptable size,
+     * after achieving which the table will be resized.
+     * The maximal size (maxSize variable) is calculated
+     * as (THRESHOLD) per cent of tableSize
+     */
+    private final static double THRESHOLD = 0.75;
+    /* good hash table sizes
+     * source: http://www.orcca.on.ca/~yxie/courses/cs2210b-2011/htmls/extra/PlanetMath_%20goodhashtable.pdf */
+    private final static int goodTableSizes[] = {53, 97, 193, 389, 769,
+                                                1543, 3079, 6151,
+                                                12289, 24593, 49157,
+                                                98317, 196613, 393241,
+                                                786433, 1572869, 3145739,
+                                                6291469};
+    private static int tableSize;
     private int size;
+    private int maxSize;
+    private int tableSizesIndex; // index of current size in goodTableSizes
 
     // the hash table is an array of linked lists which store entries
     private SinglyLinkedList hashTable[];
@@ -20,8 +37,11 @@ public class HashTable {
      * as an empty singly-linked list of hash table entries.
      */
     public HashTable() {
-        hashTable = new SinglyLinkedList[TABLE_SIZE];
-        for (int i = 0; i < TABLE_SIZE; i++) {
+        tableSize = goodTableSizes[0]; // default hash table size
+        tableSizesIndex = 0;
+        maxSize = (int) (THRESHOLD * tableSize);
+        hashTable = new SinglyLinkedList[tableSize];
+        for (int i = 0; i < tableSize; i++) {
             hashTable[i] = new SinglyLinkedList();
         }
         size = 0;
@@ -32,7 +52,7 @@ public class HashTable {
      * @return hash value of the given string fit for the table.
      */
     private int getHashValue(String string) {
-        return (string.hashCode() & 0x7fffffff) % TABLE_SIZE;
+        return (string.hashCode() & 0x7fffffff) % tableSize;
     }
 
     /**
@@ -44,6 +64,44 @@ public class HashTable {
         HashTableEntry entry = hashTable[hash].get(key);
 
         return ((entry == null) ? null : entry.getValue());
+    }
+
+    /**
+     * This utility method resizes the hash table when it gets top big.
+     * A new array of bigger size is created;
+     * elements of the old array are rehashed and copied.
+     */
+    private void resize() {
+        if (tableSizesIndex >= goodTableSizes.length - 1) {
+            tableSize *= 2;
+            tableSize--; // not a very good decision but still something
+        } else {
+            tableSize = goodTableSizes[++tableSizesIndex];
+        }
+
+        maxSize = (int) (THRESHOLD * tableSize);
+
+        SinglyLinkedList oldHashTable[] = hashTable;
+        hashTable = new SinglyLinkedList[tableSize];
+        for (int i = 0; i < tableSize; i++) {
+            hashTable[i] = new SinglyLinkedList();
+        }
+        size = 0;
+
+        for (int i = 0; i < oldHashTable.length; i++) {
+            if (oldHashTable[i].getSize() != 0) {
+                int index = 0;
+                HashTableEntry entry = oldHashTable[i].getByIndex(index);
+                while (entry != null) {
+                    /* Since rehashing takes place,
+                     * we need to put all entries in again */
+                    put(entry.getKey(), entry.getValue());
+                    entry = oldHashTable[i].getByIndex(++index);
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -64,6 +122,11 @@ public class HashTable {
         } else {
             hashTable[hash].add(new HashTableEntry(key, value));
             size++;
+
+            if (size == maxSize) {
+                resize();
+            }
+
             return null;
         }
     }
@@ -88,6 +151,7 @@ public class HashTable {
      * @return current amount of entries in the table.
      */
     public int size() {
+
         return size;
     }
 
@@ -107,7 +171,7 @@ public class HashTable {
      * This method removes all hash table entries.
      */
     public void clear() {
-        for (int i = 0; i < TABLE_SIZE; i++) {
+        for (int i = 0; i < tableSize; i++) {
             hashTable[i].clear();
         }
 

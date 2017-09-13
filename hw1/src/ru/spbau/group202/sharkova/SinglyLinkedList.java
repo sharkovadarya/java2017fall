@@ -8,12 +8,21 @@ package ru.spbau.group202.sharkova;
 public class SinglyLinkedList {
 
     private Node head;
+    private int size;
+
+    // used for more effective list traversal in getByIndex method
+    private int lastIndex;
+    private Node lastNode;
 
     /**
      * Empty singly-linked list constructor.
      */
     public SinglyLinkedList() {
+
         head = null;
+        size = 0;
+        lastIndex = Integer.MAX_VALUE;
+        lastNode = null;
     }
 
     /**
@@ -35,6 +44,8 @@ public class SinglyLinkedList {
 
             cur.setNext(tmp);
         }
+
+        size++;
     }
 
     /**
@@ -92,6 +103,7 @@ public class SinglyLinkedList {
         if (cur.getNext().getData().getKey().equals(key)) {
             String returnValue = cur.getNext().getData().getValue();
             cur.setNext(cur.getNext().getNext());
+            size--;
             return returnValue;
         }
 
@@ -106,6 +118,43 @@ public class SinglyLinkedList {
         /* Java has automatic garbage collection
          * so simply setting the list's head to null should be legit */
         head = null;
+        size = 0;
+    }
+
+    /**
+     * This utility method iterates over the list
+     * and finds an element of given position.
+     * @param index index of the element to be found
+     * @return entry occupying the given position in the list;
+     *         null otherwise
+     */
+    public HashTableEntry getByIndex(int index) {
+        if (index == 0) {
+            return head.getData();
+        }
+
+        Node cur = lastIndex <= index ? lastNode : head;
+        int currentIndex = lastIndex < index ? lastIndex : 0;
+        while (cur.getNext() != null && currentIndex < index) {
+            cur = cur.getNext();
+            currentIndex++;
+        }
+
+        if (currentIndex != index) {
+            return null;
+        }
+
+        lastIndex = index;
+        lastNode = cur;
+
+        return cur.getData();
+    }
+
+    /**
+     * @return number of elements in the list
+     */
+    public int getSize() {
+        return size;
     }
 
 }
