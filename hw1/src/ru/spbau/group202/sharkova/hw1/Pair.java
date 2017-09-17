@@ -1,15 +1,15 @@
-package ru.spbau.group202.sharkova;
+package ru.spbau.group202.sharkova.hw1;
 
 /**
  * This class represents a hash table entry.
  * An entry consists of a key and a value.
  */
-public class HashTableEntry {
+public class Pair {
 
     private String key;
     private String value;
 
-    public HashTableEntry(String key, String value) {
+    public Pair(String key, String value) {
         this.key = key;
         this.value = value;
     }

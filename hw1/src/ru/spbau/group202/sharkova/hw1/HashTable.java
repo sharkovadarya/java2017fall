@@ -1,4 +1,4 @@
-package ru.spbau.group202.sharkova;
+package ru.spbau.group202.sharkova.hw1;
 
 /**
  * This class represents a closed addressing hash table.
@@ -8,7 +8,7 @@ package ru.spbau.group202.sharkova;
  * check whether the element of the given key is in the table,
  * get an amount of all keys in the table.
  * */
-public class HashTable {
+public class  HashTable {
 
     /* The table has a maximal acceptable size,
      * after achieving which the table will be resized.
@@ -19,15 +19,16 @@ public class HashTable {
     /* good hash table sizes
      * source: http://www.orcca.on.ca/~yxie/courses/cs2210b-2011/htmls/extra/PlanetMath_%20goodhashtable.pdf */
     private final static int goodTableSizes[] = {53, 97, 193, 389, 769,
-                                                1543, 3079, 6151,
-                                                12289, 24593, 49157,
-                                                98317, 196613, 393241,
-                                                786433, 1572869, 3145739,
-                                                6291469};
-    private static int tableSize;
-    private int size;
-    private int maxSize;
-    private int tableSizesIndex; // index of current size in goodTableSizes
+            1543, 3079, 6151,
+            12289, 24593, 49157,
+            98317, 196613, 393241,
+            786433, 1572869, 3145739,
+            6291469};
+
+    private int tableSizesIndex = 0; // index of current size in goodTableSizes
+    private int tableSize = goodTableSizes[0];
+    private int maxSize = (int) (THRESHOLD * tableSize);
+    private int size = 0;
 
     // the hash table is an array of linked lists which store entries
     private SinglyLinkedList hashTable[];
@@ -47,19 +48,15 @@ public class HashTable {
      * as an empty singly-linked list of hash table entries.
      */
     public HashTable() {
-        tableSize = goodTableSizes[0]; // default hash table size
-        tableSizesIndex = 0;
-        maxSize = (int) (THRESHOLD * tableSize);
         hashTable = new SinglyLinkedList[tableSize];
         for (int i = 0; i < tableSize; i++) {
             hashTable[i] = new SinglyLinkedList();
         }
-        size = 0;
     }
 
     public String get(String key) {
         int hash = getHashValue(key);
-        HashTableEntry entry = hashTable[hash].get(key);
+        Pair entry = hashTable[hash].get(key);
 
         return ((entry == null) ? null : entry.getValue());
     }
@@ -89,7 +86,7 @@ public class HashTable {
         for (SinglyLinkedList list : oldHashTable) {
             if (list.getSize() != 0) {
                 int index = 0;
-                HashTableEntry entry = list.getByIndex(index);
+                Pair entry = list.getByIndex(index);
                 while (entry != null) {
                     /* Since rehashing takes place,
                      * we need to put all entries in again */
@@ -98,6 +95,7 @@ public class HashTable {
                 }
             }
         }
+
     }
 
     /**
@@ -110,13 +108,13 @@ public class HashTable {
     public String put(String key, String value) {
         int hash = getHashValue(key);
 
-        HashTableEntry entry = hashTable[hash].get(key);
+        Pair entry = hashTable[hash].get(key);
         if (entry != null) {
             String oldValue = entry.getValue();
             entry.setValue(value);
             return oldValue;
         } else {
-            hashTable[hash].add(new HashTableEntry(key, value));
+            hashTable[hash].add(new Pair(key, value));
             size++;
 
             if (size == maxSize) {
@@ -159,7 +157,7 @@ public class HashTable {
      */
     public boolean contains(String key) {
         int hash = getHashValue(key);
-        HashTableEntry entry = hashTable[hash].get(key);
+        Pair entry = hashTable[hash].get(key);
         return (entry != null);
     }
 

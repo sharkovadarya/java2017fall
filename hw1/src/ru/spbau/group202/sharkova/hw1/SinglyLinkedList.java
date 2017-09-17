@@ -1,4 +1,4 @@
-package ru.spbau.group202.sharkova;
+package ru.spbau.group202.sharkova.hw1;
 
 /**
  * This class represents a singly-linked list of hash table entries
@@ -32,7 +32,7 @@ public class SinglyLinkedList {
      * at the end of the list.
      * @param data data to be added to the list.
      */
-    public void add(HashTableEntry data) {
+    public void add(Pair data) {
 
         Node tmp = new Node(data);
         Node cur = head;
@@ -54,7 +54,7 @@ public class SinglyLinkedList {
      * @param key the key of the entry to be found.
      * @return the element with the given key stored in the list.
      */
-    public HashTableEntry get(String key) {
+    public Pair get(String key) {
         Node cur = head;
 
         if (cur == null) {
@@ -130,7 +130,7 @@ public class SinglyLinkedList {
      * @return entry occupying the given position in the list;
      *         null otherwise
      */
-    public HashTableEntry getByIndex(int index) {
+    public Pair getByIndex(int index) {
         if (index == 0) {
             return head.data;
         }
@@ -156,6 +156,7 @@ public class SinglyLinkedList {
      * @return number of elements in the list
      */
     public int getSize() {
+
         return size;
     }
 
@@ -165,14 +166,14 @@ public class SinglyLinkedList {
     class Node {
 
         private Node next;
-        private HashTableEntry data;
+        private Pair data;
 
         /**
          * Node constructor.
          * Next node does not exist yet so it's value will be null.
          * @param info data that will be stored in the node.
          */
-        public Node(HashTableEntry info) {
+        public Node(Pair info) {
             next = null;
             data = info;
         }
