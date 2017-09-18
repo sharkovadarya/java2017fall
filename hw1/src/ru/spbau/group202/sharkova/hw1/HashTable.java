@@ -100,6 +100,8 @@ public class  HashTable {
 
     /**
      * This method inserts a new hash table entry to the table.
+     * If an entry with the given key already exists,
+     * its value is replaced by the new value.
      * @param key key of the new entry.
      * @param value value of the new entry.
      * @return if the entry with the given key exists,
