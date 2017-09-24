@@ -19,7 +19,12 @@ public class SpiralMatrixTest {
 
         return new String(baos.toByteArray());
     }
-
+ 
+    /**
+     * This test checks whether an empty matrix
+     * contains zeros only, outputs zeros
+     * before and after sorting by columns.
+     */
     @Test
     public void testEmptyMatrixConstructor() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(3);
@@ -36,6 +41,10 @@ public class SpiralMatrixTest {
         assertEquals("0 0 0 0 0 0 0 0 0 ", s);
     }
 
+    /**
+     * This test checks the spiral output 
+     * one a one-element matrix.
+     */
     @Test
     public void testSpiralOutputOneElement() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(1);
@@ -46,6 +55,10 @@ public class SpiralMatrixTest {
         assertEquals("1 ", s);
     }
 
+    /**
+     * This test checks the spiral output 
+     * on a 3x3 matrix.
+     */
     @Test
     public void testSpiralOutputSmall() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(3);
@@ -60,6 +73,10 @@ public class SpiralMatrixTest {
         assertEquals("4 5 2 1 0 3 6 7 8 ", s);
     }
 
+    /**
+     * This test checks the spiral output
+     * on a manually filled 5x5 matrix.
+     */
     @Test
     public void testSpiralOutput() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(5);
@@ -98,6 +115,11 @@ public class SpiralMatrixTest {
         assertEquals("1 23 11 6 12 4 7 3 33 55 6 67 23 1 10 7 11 6 8 2 15 -2 0 -7 5 ", s);
     }
 
+    /**
+     * This test checks column sorting 
+     * on a one-element matrix
+     * by checking the result of the spiral output.
+     */
     @Test
     public void testSortColumnsOneElement() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(1);
@@ -110,6 +132,11 @@ public class SpiralMatrixTest {
         assertEquals("1 ", s);
     }
 
+    /**
+     * This test checks column sorting 
+     * on a 3x3 matrix with sorted columns
+     * by checking the result of the spiral output.
+     */
     @Test
     public void testSortColumnsSorted() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(3);
@@ -126,6 +153,11 @@ public class SpiralMatrixTest {
         assertEquals("4 5 2 1 0 3 6 7 8 ", s);
     }
 
+    /**
+     * This test checks column sorting 
+     * on a 3x3 matrix with unsorted columns
+     * by checking the result of the spiral output.
+     */
     @Test
     public void testSortColumnsSmall() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(3);
@@ -142,6 +174,11 @@ public class SpiralMatrixTest {
         assertEquals("-4 -3 0 -1 -2 -5 -8 -7 -6 ", s);
     }
 
+    /**
+     * This test checks column sorting 
+     * on a manually filled 5x5 matrix with unsorted columns
+     * by checking the result of the spiral output.
+     */
     @Test
     public void testSortColumns() {
         SpiralMatrix spiralMatrix = new SpiralMatrix(5);
