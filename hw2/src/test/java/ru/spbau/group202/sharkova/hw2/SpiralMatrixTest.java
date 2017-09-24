@@ -31,13 +31,10 @@ public class SpiralMatrixTest {
 
         // convert output to string for checking equality
         String s = getStringFromSpiralOutput(spiralMatrix);
-
         assertEquals("0 0 0 0 0 0 0 0 0 ", s);
 
         spiralMatrix.sortColumnsByFirstElements();
-
         s = getStringFromSpiralOutput(spiralMatrix);
-
         assertEquals("0 0 0 0 0 0 0 0 0 ", s);
     }
 
