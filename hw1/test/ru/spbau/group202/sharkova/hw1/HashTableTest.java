@@ -90,11 +90,35 @@ public class HashTableTest {
         // these keys are expected to have equal hash codes
         assertEquals(null, hashTable.put("0-42L", "val1"));
         assertEquals(null, hashTable.put("0-43-", "val2"));
-        assertEquals(null, hashTable.put("0-41k", "val3"));
 
         assertEquals("val1", hashTable.get("0-42L"));
         assertEquals("val2", hashTable.get("0-43-"));
-        assertEquals("val3", hashTable.get("0-41k"));
+        assertEquals(null, hashTable.get("0-41k"));
+    }
+
+    @Test
+    public void testContainsEqualHashElements() {
+        HashTable hashTable = new HashTable();
+
+        // these keys are expected to have equal hash codes
+        assertEquals(null, hashTable.put("0-42L", "val1"));
+        assertEquals(null, hashTable.put("0-43-", "val2"));
+
+        assertEquals(true, hashTable.contains("0-42L"));
+        assertEquals(true, hashTable.contains("0-43-"));
+        assertEquals(false, hashTable.contains("0-41k"));
+    }
+
+    @Test
+    public void testReplaceEqualHashElements() {
+        HashTable hashTable = new HashTable();
+
+        // these keys are expected to have equal hash codes
+        assertEquals(null, hashTable.put("0-42L", "val1"));
+        assertEquals(null, hashTable.put("0-43-", "val2"));
+        assertEquals("val1", hashTable.put("0-42L", "val3"));
+        assertEquals("val3", hashTable.get("0-42L"));
+        assertEquals("val2", hashTable.get("0-43-"));
     }
 
     @Test
