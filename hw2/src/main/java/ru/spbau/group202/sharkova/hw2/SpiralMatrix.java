@@ -13,12 +13,12 @@ import java.util.Comparator;
  */
 public class SpiralMatrix {
 
-    private final int N;
+    private final int size;
     private int matrix[][];
 
-    public SpiralMatrix(int N) {
-        matrix = new int[N][N];
-        this.N = N;
+    public SpiralMatrix(int n) {
+        matrix = new int[n][n];
+        size = n;
     }
 
     /**
@@ -30,8 +30,8 @@ public class SpiralMatrix {
      * @param value new value
      */
     public void setValue(int i, int j, int value) {
-        if (i < 0 || i >= N || j < 0 || j >= N) {
-            return;
+        if (i < 0 || i >= size || j < 0 || j >= size) {
+            throw new IllegalArgumentException("Row/column index is out of bounds.");
         }
 
         matrix[i][j] = value;
@@ -44,8 +44,8 @@ public class SpiralMatrix {
      */
     public void printElementsInSpiralOrder(PrintStream stream) {
         // matrix centre coordinates
-        int i = (N - 1) / 2;
-        int j = (N - 1) / 2;
+        int i = (size - 1) / 2;
+        int j = (size - 1) / 2;
         stream.printf("%d ", matrix[i][j]);
 
         // spiral directions
@@ -59,7 +59,7 @@ public class SpiralMatrix {
             for (int t = 0; t < 4; t++) {   
                 // go in a certain direction and print elements
                 for (int c = 1; c <= k; c++) {
-                    if (j + c * xDir[t] == N) {
+                    if (j + c * xDir[t] == size) {
                         return;
                     }
 
