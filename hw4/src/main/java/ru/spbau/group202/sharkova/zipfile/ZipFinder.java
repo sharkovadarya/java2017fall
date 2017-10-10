@@ -1,5 +1,7 @@
 package ru.spbau.group202.sharkova.zipfile;
 
+import com.sun.istack.internal.NotNull;
+
 import java.io.*;
 import java.util.regex.PatternSyntaxException;
 import java.util.zip.ZipEntry;
@@ -20,7 +22,7 @@ public class ZipFinder {
      * @param filepath path to the directory in which to search
      * @param regex regular expression for file names
      */
-    public static void zipFiles(String filepath, String regex) {
+    public static void zipFiles(@NotNull String filepath, @NotNull String regex) {
         extractFilesByRegex(findZipFiles(filepath), regex, filepath);
     }
 
@@ -30,7 +32,8 @@ public class ZipFinder {
      *                 in which the search is performed
      * @return array of file descriptors of found .zip files
      */
-    private static File[] findZipFiles(String filepath) {
+    @NotNull
+    private static File[] findZipFiles(@NotNull String filepath) {
         File dir = new File(filepath);
 
         if (!dir.exists() || !dir.isDirectory()) {
@@ -49,8 +52,9 @@ public class ZipFinder {
      * @param regex regular expression for filenames
      * @param path files will be extracted to that path
      */
-    private static void extractFilesByRegex(File[] filenames,
-                                            String regex, String path) {
+    private static void extractFilesByRegex(@NotNull File[] filenames,
+                                            @NotNull String regex,
+                                            @NotNull String path) {
 
         for (File f : filenames) {
             try (ZipInputStream in = new ZipInputStream(
@@ -87,3 +91,4 @@ public class ZipFinder {
     }
 
 }
+
