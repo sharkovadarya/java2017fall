@@ -2,7 +2,6 @@ package ru.spbau.group202.sharkova.test1110;
 
 import com.sun.istack.internal.Nullable;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.*;
 
 public class LinkedHashMap<T, U> implements Map {
@@ -99,8 +98,11 @@ public class LinkedHashMap<T, U> implements Map {
         size = 0;
     }
 
+    /**
+     * This method returns a set of hash table entry keys.
+     */
     public Set keySet() {
-        return new KeySet();
+        return keySet();
     }
 
     /**
@@ -156,13 +158,16 @@ public class LinkedHashMap<T, U> implements Map {
     public void putAll(Map map) {
 
     }
-
+    
     public int size() {
         return size;
     }
 
+    /**
+     * This method returns a set of hash table entries.
+     */
     public Set<Map.Entry> entrySet() {
-        return null;
+        return entrySet();
     }
 
     /**
@@ -186,9 +191,12 @@ public class LinkedHashMap<T, U> implements Map {
         return size == 0;
     }
 
+    /**
+     * This method returns a collection of hash table values.
+     */
     @Override
     public Collection values() {
-        return null;
+        return new Values();
     }
 
     /**
@@ -235,8 +243,7 @@ public class LinkedHashMap<T, U> implements Map {
         }
 
     }
-
-
+        
     class HashTableIterator implements Iterator {
 
         HashMapEntry current;
@@ -248,8 +255,8 @@ public class LinkedHashMap<T, U> implements Map {
         }
 
         public HashTableIterator() {
-            this.current = null;
-            this.next = null;
+            this.current = header;
+            this.next = header.getAfter();
         }
 
         @Override
@@ -270,19 +277,61 @@ public class LinkedHashMap<T, U> implements Map {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    class ValueIterator extends HashTableIterator {
+        public T next() {
+            return (T) next.getValue();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    class EntryIterator extends HashTableIterator {
+        public HashMapEntry<T, U> next() {
+            return (HashMapEntry) next;
+        }
+    }
+
     class KeySet extends AbstractSet<T> {
 
         @Override
+        @SuppressWarnings("unchecked")
         public Iterator<T> iterator() {
-            return null;
+            return new KeyIterator();
         }
 
         @Override
         public int size() {
-            return 0;
+            return size;
+        }
+    }
+
+    class EntrySet extends AbstractSet<Entry<T, U>> {
+        @Override
+        @SuppressWarnings("unchecked")
+        public Iterator<Entry<T, U>> iterator() {
+            return new EntryIterator();
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    class Values extends AbstractCollection<U> {
+        @Override
+        public Iterator<U> iterator() {
+            return new ValueIterator();
+        }
+
+        @Override
+        public int size() {
+            return size;
         }
     }
 
 
 
 }
+
