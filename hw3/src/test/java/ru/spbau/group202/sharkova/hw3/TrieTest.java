@@ -8,6 +8,11 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
+/**
+ * This class checks correctness of Trie class methods.
+ * Checked methods: size(), contains(), add(), remove(),
+ * howManyStartsWithPrefix(), serialize() and deserialize(). 
+ */
 public class TrieTest {
 
     /**
