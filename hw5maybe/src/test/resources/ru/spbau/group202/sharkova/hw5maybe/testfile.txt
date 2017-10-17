@@ -1,0 +1,9 @@
+4
+32
+33.5
+not a number
+i8
+NaN
+1plain1text1
+1 32
+0
