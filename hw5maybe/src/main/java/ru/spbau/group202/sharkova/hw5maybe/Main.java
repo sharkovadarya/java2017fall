@@ -125,7 +125,7 @@ public class Main {
         try {
             processNumbersFromFile(args[0], args[1]);
         } catch (FileNotFoundException e) {
-            System.out.println("Input/output file does not exist.");
+            System.out.println("Input file does not exist.");
         } catch (IOException e) {
             System.out.println("Incorrect input/output file provided.");
         }
