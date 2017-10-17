@@ -6,6 +6,12 @@ import java.util.function.Function;
 
 import static org.junit.Assert.*;
 
+/**
+ * This class tests correctness of Maybe class methods
+ * both for objects that contain a value
+ * and for objects that contain none.
+ * Tested methods: get(), isPresent(), map().
+ */
 public class MaybeTest {
 
     /**
