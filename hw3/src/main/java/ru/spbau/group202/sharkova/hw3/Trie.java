@@ -15,9 +15,9 @@ public class Trie implements Serializable {
     // maximal string length
     private int maxLength = 256;
 
-    private Vertex[] trie;
-    private int capacity;
-    private int size;
+    private Vertex[] children;
+    private int capacity = 1;
+    private int size = 0;
 
     /**
      * Empty trie constructor.
@@ -32,14 +32,13 @@ public class Trie implements Serializable {
         }
 
         Arrays.fill(trie[0].next, -1);
-        capacity = 1;
-        size = 0;
     }
 
     /**
      * This method adds a string to the trie.
      * It traverses the trie until there is no prefix matching,
      * then adds new edges until the string is fully stored.
+     * Thus the insertion is performed in O(|element|) time.
      * @param element string to be added
      * @return true if the string was not in the trie yet;
      *         false otherwise
@@ -77,6 +76,7 @@ public class Trie implements Serializable {
 
     /**
      * This method checks whether the given string is in the trie.
+     * The search is performed in O(|element|) time.
      * @param element the string to be found
      * @return true if the string is in the trie;
      *         false otherwise
@@ -89,6 +89,7 @@ public class Trie implements Serializable {
 
     /**
      * This method removes a given string from the trie.
+     * Deletion works in O(|element|) time.
      * @param element the string to be removed
      * @return true if the string was in the trie;
      *         false otherwise
@@ -110,6 +111,7 @@ public class Trie implements Serializable {
 
     /**
      * This method returns the current number of strings in the trie.
+     * The action is performed in O(1) time.
      * @return the trie size
      */
     public int size() {
@@ -119,6 +121,7 @@ public class Trie implements Serializable {
     /**
      * This method calculates the number of currently stored strings
      * with given prefix.
+     * The action is performed in O(|prefix|) time.
      * @param prefix prefix to be matched against
      * @return number of string in trie that match the given prefix
      */
