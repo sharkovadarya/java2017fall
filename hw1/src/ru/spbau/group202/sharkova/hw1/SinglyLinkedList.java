@@ -131,6 +131,11 @@ public class SinglyLinkedList {
      *         null otherwise
      */
     public Pair getByIndex(int index) {
+
+        if (head == null) {
+            return null;
+        }
+
         if (index == 0) {
             return head.data;
         }
