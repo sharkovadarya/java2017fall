@@ -60,7 +60,8 @@ public class ZipFinderTest {
         ZipFinder.zipFiles(file.getAbsolutePath(), "*.txt");
 
         String message = new String(baos.toByteArray(), Charset.defaultCharset());
-        assertEquals("Incorrect regular expression.\n", message);
+        assertTrue(message.equals("Incorrect regular expression.\n")
+                  || message.equals("Incorrect regular expression.\r\n"));
 
         System.out.flush();
         System.setOut(old);

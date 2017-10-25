@@ -1,6 +1,6 @@
 package ru.spbau.group202.sharkova.zipfile;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.regex.PatternSyntaxException;
