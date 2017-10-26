@@ -5,14 +5,11 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-/**
- * This class checks correctness of Trie class methods.
- * Checked methods: size(), contains(), add(), remove(),
- * howManyStartsWithPrefix(), serialize() and deserialize(). 
- */
 public class TrieTest {
 
     /**
@@ -256,14 +253,7 @@ public class TrieTest {
         assertEquals(true, trie.add("aB"));
         assertEquals(true, trie.add("aBC"));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            trie.serialize(baos);
-        } catch (IOException e) {
-            System.out.println("Input/output exception in serialization test.");
-        }
-
-        byte[] serializedTrieData = baos.toByteArray();
+        byte[] serializedTrieData = getSerializedData(trie);
 
         /*
          * IOException specifically will not be handled separately,
@@ -291,6 +281,46 @@ public class TrieTest {
     }
 
     /**
+     * This test serializes a trie and compares results
+     * to the expected byte array.
+     */
+    @Test
+    public void testSerialize() {
+        Trie trie = new Trie();
+
+        assertEquals(true, trie.add("a"));
+        assertEquals(true, trie.add("ab"));
+        assertEquals(true, trie.add("abc"));
+
+        byte[] serializedData = getSerializedData(trie);
+        byte[] correctData = generateExpectedSerializedData();
+        assertEquals(true, Arrays.equals(serializedData, correctData));
+    }
+
+    /**
+     * This test takes correct serialized data and deserializes it,
+     * checks the behavior of the resulting trie.
+     */
+    @Test
+    public void testDeserialize() {
+        byte[] correctData = generateExpectedSerializedData();
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(correctData);
+
+        Trie trie = new Trie();
+        try {
+            trie.deserialize(bais);
+            assertEquals(true, trie.contains("a"));
+            assertEquals(true, trie.contains("ab"));
+            assertEquals(true, trie.contains("abc"));
+            assertEquals(false, trie.contains("A"));
+            assertEquals(3, trie.size());
+        } catch (IOException e) {
+            fail("Unexpected exception");
+        }
+    }
+
+    /**
      * This test checks deserialization of incorrect data
      * (meaning: not a correctly serialized tree).
      * The (deserialize) method is expected to throw an expection.
@@ -305,14 +335,9 @@ public class TrieTest {
         assertEquals(true, trie.add("aB"));
         assertEquals(true, trie.add("aBC"));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            trie.serialize(baos);
-        } catch (IOException e) {
-            System.out.println("Input/output exception in serialization test.");
-        }
 
-        byte[] serializedTrieData = baos.toByteArray();
+
+        byte[] serializedTrieData = getSerializedData(trie);
 
         byte[] incorrectData = new byte[serializedTrieData.length / 2];
         System.arraycopy(serializedTrieData, 0, incorrectData, 0, incorrectData.length / 2);
@@ -322,5 +347,58 @@ public class TrieTest {
         trie.deserialize(bais);
     }
 
+    /**
+     * This utiity method serializes a given trie
+     * and returns the resulting byte array.
+     * */
+    private byte[] getSerializedData(Trie trie) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            trie.serialize(baos);
+        } catch (IOException e) {
+            System.out.println("Input/output exception in serialization test.");
+        }
 
+        return baos.toByteArray();
+    }
+
+    /**
+     * This utility method generated correct serialized data
+     * for a trie with "a", "ab" and "abc" strings
+     */
+    private byte[] generateExpectedSerializedData() {
+        // the following is the expected output construction
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+            oos.writeInt(256);
+            int[] arr1 = new int[256];
+            Arrays.fill(arr1, -1);
+            arr1[97] = 1;
+            oos.writeObject(arr1);
+            oos.writeBoolean(false);
+            int[] arr2 = new int[256];
+            Arrays.fill(arr2, -1);
+            arr2[98] = 2;
+            oos.writeObject(arr2);
+            oos.writeBoolean(true);
+            int[] arr3 = new int[256];
+            Arrays.fill(arr3, -1);
+            arr3[99] = 3;
+            oos.writeObject(arr3);
+            oos.writeBoolean(true);
+            for (int i = 3; i < 256; i++) {
+                int[] arr = new int[256];
+                Arrays.fill(arr, i == 3 ? -1 : 0);
+                oos.writeObject(arr);
+                oos.writeBoolean(i <= 3);
+            }
+            oos.writeInt(4);
+            oos.writeInt(3);
+            oos.close();
+        } catch (IOException e) {
+            fail("Unexpected exception");
+        }
+
+        return baos.toByteArray();
+    }
 }
