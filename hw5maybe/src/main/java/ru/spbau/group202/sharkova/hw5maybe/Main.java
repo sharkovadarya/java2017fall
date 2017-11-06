@@ -50,12 +50,12 @@ public class Main {
      * gets a Maybe object based on content of each line,
      * outputs a squared number if Maybe contains a number,
      * or "null" otherwise, to the output file.
+     * @throws IOException if incorrect input/output filepath is provided
      * @param inputFilePath path to the input file
      * @param outputFilePath path to the output file
      */
     private static void processNumbersFromFile(@NotNull String inputFilePath,
-                                @NotNull String outputFilePath)
-    throws IOException {
+                            @NotNull String outputFilePath) throws IOException {
         File inputFile = new File(inputFilePath);
         String absoluteInputFilePath = inputFile.getAbsolutePath();
         File outputFile = new File(outputFilePath);

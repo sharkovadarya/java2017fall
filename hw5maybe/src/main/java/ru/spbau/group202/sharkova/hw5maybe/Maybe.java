@@ -7,6 +7,7 @@ import java.util.function.Function;
 /**
  * This class emulates behavior similar to Optional class.
  * It contains either a value or nothing.
+ * @param <T> type of the stored value 
  */
 public class Maybe<T> {
 
@@ -35,8 +36,8 @@ public class Maybe<T> {
     }
 
     /**
-     * This method returns stored value if present,
-     * throws an exception otherwise.
+     * This method returns stored value if present.
+     * @throws NullValueException if the value is not present
      * @return stored data
      */
     @NotNull
