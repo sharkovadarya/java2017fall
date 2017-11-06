@@ -61,19 +61,14 @@ public class SetTest {
 
         /*
          * The following line should throw (and does so)
-         * an IllegalArgumentException when used with IDEA;
-         * or it should throw a NPE when used with 'mvn tests'.
+         * an IllegalArgumentException when used with IDEA.
          */
         try {
             assertEquals(true, setString.add(null));
             fail("There should've been an exception");
         } catch (IllegalArgumentException e) {
             assertTrue(true);
-        } catch (NullPointerException e) {
-            System.out.println("Tried passing null to add()");
-            System.out.println("NullPointerException has been thrown");
-            System.out.println("If used with IntelliJ IDEA, this test is failed\n");
-        }
+        } 
     }
 
     /**

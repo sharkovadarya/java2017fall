@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * and allows to get the current amount of elements in the set.
  * All set elements are distinct.
  */
-public class Set<T extends Comparable> {
+public class Set<T extends Comparable<T>> {
 
     private int size = 0;
     private Node root = null;
@@ -20,8 +20,7 @@ public class Set<T extends Comparable> {
      * @param data value to be inserted
      * @return true if the value was not present in the set;
      *         false otherwise
-     */
-    @SuppressWarnings("unchecked")
+     */    
     public boolean add(@NotNull T data) {
         if (contains(data)) {
             return false;
@@ -65,7 +64,6 @@ public class Set<T extends Comparable> {
      * @return true if the value is in the set;
      *         false otherwise
      */
-    @SuppressWarnings("unchecked")
     public boolean contains(@NotNull T data) {
         Node current = root;
 
