@@ -15,6 +15,13 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * This class checks correctness of Main class methods.
+ * Main class handles operations with files, so file-related work
+ * (including exceptions) is checked.
+ * Correctness of result against expected result is also checked.
+ * This class uses provided test file in the 'resources' directory.
+ */
 public class MainTest {
 
     @Rule
