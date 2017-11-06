@@ -69,7 +69,7 @@ public class MainTest {
         String[] incorrectArgs = {"src/dir", "src/dir"};
         Main.main(incorrectArgs);
         String message = new String(baos.toByteArray(), Charset.defaultCharset());
-        assertEquals("Input/output file does not exist.\n", message);
+        assertEquals("Input file does not exist.\n", message);
 
         System.out.flush();
         System.setOut(old);
