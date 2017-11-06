@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.Arrays;
 
 /**
- * This class implements a children data structure.
- * A children is used to store and look up strings.
- * A children is a rooted tree with symbols on its edges.
- * This children supports insertion and removal of a string,
- * checking whether the children contains a given string/prefix,
+ * This class implements a trie data structure.
+ * A trie is used to store and look up strings.
+ * A trie is a rooted tree with symbols on its edges.
+ * This trie supports insertion and removal of a string,
+ * checking whether the trie contains a given string/prefix,
  * counting how many elements start with a given prefix.
  */
 public class Trie implements Serializable {
@@ -20,7 +20,7 @@ public class Trie implements Serializable {
     private int size = 0;
 
     /**
-     * Empty children constructor.
+     * Empty trie constructor.
      * The 0th element of the (children) array is a utility element
      * and thus is not used for storing a symbol directly.
      */
@@ -31,7 +31,7 @@ public class Trie implements Serializable {
             children[i] = new Vertex();
         }
 
-        Arrays.fill(getVertexByIndex(0).next, -1);
+        Arrays.fill(childVertex(0).next, -1);
     }
 
     /**
@@ -54,21 +54,21 @@ public class Trie implements Serializable {
         // traverse the children
         for (char symbol : charArray) {
             int c = index(symbol);
-            getVertexByIndex(s).prefixes++;
-            if (getVertexByIndex(s).getNext(c) == -1) {
+            childVertex(s).prefixes++;
+            if (childVertex(s).getNext(c) == -1) {
                 if (capacity == maxLength) {
                     resize();
                 }
 
-                getVertexByIndex(capacity).prefixes = 1;
-                Arrays.fill(getVertexByIndex(capacity).next, -1);
-                getVertexByIndex(s).setNext(c, capacity++);
+                childVertex(capacity).prefixes = 1;
+                Arrays.fill(childVertex(capacity).next, -1);
+                childVertex(s).setNext(c, capacity++);
             }
 
-            s = getVertexByIndex(s).getNext(c);
+            s = childVertex(s).getNext(c);
         }
 
-        getVertexByIndex(s).isLeaf = true;
+        childVertex(s).isLeaf = true;
         size++;
 
         return true;
@@ -82,9 +82,13 @@ public class Trie implements Serializable {
      *         false otherwise
      */
     public boolean contains(String element) {
-        int s = traverse(element);
+        /*
+         * The traverse() method gets the index of the vertex
+         * corresponding to the (element) string.        
+         */
+        int index = traverse(element);
 
-        return s != -1 && getVertexByIndex(s).isLeaf;
+        return index != -1 && childVertex(index).isLeaf;
     }
 
     /**
@@ -135,14 +139,14 @@ public class Trie implements Serializable {
         int s = 0;
         for (char symbol : charArray) {
             int c = index(symbol);
-            s = getVertexByIndex(s).getNext(c);
+            s = childVertex(s).getNext(c);
         }
 
-        return contains(prefix) ? getVertexByIndex(s).prefixes : getVertexByIndex(s).prefixes - 1;
+        return contains(prefix) ? childVertex(s).prefixes : childVertex(s).prefixes - 1;
     }
 
     /**
-     * This method serializes the children.
+     * This method serializes the trie.
      * @param out output stream to which the serialized data is written
      */
     public void serialize(OutputStream out) throws IOException {
@@ -159,8 +163,8 @@ public class Trie implements Serializable {
     }
 
     /**
-     * This method reads a serialized children from the given stream,
-     * deserializes it and replaces the current children
+     * This method reads a serialized trie from the given stream,
+     * deserializes it and replaces the current trie
      * with the deserialized one.
      * @param in input stream from which data to be deserialized is read
      */
@@ -173,13 +177,13 @@ public class Trie implements Serializable {
         try (ObjectInputStream ois = new ObjectInputStream(in)) {
             maxLength = ois.readInt();
             for (int i = 0; i < maxLength; i++) {
-                getVertexByIndex(i).deserialize(ois);
+                childVertex(i).deserialize(ois);
             }
             capacity = ois.readInt();
             size = ois.readInt();
         } catch (ClassNotFoundException e) {
             System.out.println("Illegal serialization; " +
-                    "the children cannot be deserialized.");
+                    "the trie cannot be deserialized.");
         }
 
     }
@@ -210,8 +214,8 @@ public class Trie implements Serializable {
     }
 
     /**
-     * This utility method traverses the children.
-     * It is used for checking whether a string is in the children.
+     * This utility method traverses the trie.
+     * It is used for checking whether a string is in the trie.
      */
     private int traverse(String string)
     {
@@ -220,10 +224,10 @@ public class Trie implements Serializable {
 
         for (char symbol : charArray) {
             int c = index(symbol);
-            if (getVertexByIndex(s).getNext(c) == -1) {
+            if (childVertex(s).getNext(c) == -1) {
                 return -1;
             }
-            s = getVertexByIndex(s).getNext(c);
+            s = childVertex(s).getNext(c);
         }
 
         return s;
@@ -245,20 +249,20 @@ public class Trie implements Serializable {
      */
     private boolean removeHelper(int idx, char[] charArray, int level, int length) {
         if (level == length) {
-            getVertexByIndex(idx).isLeaf = false;
+            childVertex(idx).isLeaf = false;
             if (charArray.length == 1) {
-                getVertexByIndex(idx).prefixes--;
+                childVertex(idx).prefixes--;
             }
-            return getVertexByIndex(idx).isFree();
+            return childVertex(idx).isFree();
         } else {
             int c = index(charArray[level]);
-            if (removeHelper(getVertexByIndex(idx).getNext(c), charArray, level + 1, length)) {
-                getVertexByIndex(getVertexByIndex(idx).getNext(c)).clear();
-                return (!getVertexByIndex(idx).isLeaf && getVertexByIndex(idx).isFree());
+            if (removeHelper(childVertex(idx).getNext(c), charArray, level + 1, length)) {
+                childVertex(childVertex(idx).getNext(c)).clear();
+                return (!childVertex(idx).isLeaf && childVertex(idx).isFree());
             }
         }
 
-        getVertexByIndex(idx).prefixes--;
+        childVertex(idx).prefixes--;
 
         return false;
     }
@@ -266,7 +270,7 @@ public class Trie implements Serializable {
 
 
     /**
-     * This utility class represents a children vertex.
+     * This utility class represents a trie vertex.
      * It stores an array that represents edges
      * and a mark of whether the vertex is a leaf.
      */
@@ -308,7 +312,7 @@ public class Trie implements Serializable {
         }
 
         /**
-         * This utility method is used for children serialization.
+         * This utility method is used for trie serialization.
          * @param oos a stream to which data will be written
          */
         public void serialize(ObjectOutputStream oos) throws IOException {
@@ -322,7 +326,7 @@ public class Trie implements Serializable {
         }
 
         /**
-         * This utility method is used for children deserialization.
+         * This utility method is used for trie deserialization.
          * @param ois a stream from which data will be read
          * */
         public void deserialize(ObjectInputStream ois)
@@ -333,7 +337,7 @@ public class Trie implements Serializable {
 
     }
     
-    private Vertex getVertexByIndex(int idx) {
+    private Vertex childVertex(int idx) {
         return children[idx];
     }
 
