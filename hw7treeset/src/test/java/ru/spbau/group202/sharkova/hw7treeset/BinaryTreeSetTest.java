@@ -202,7 +202,6 @@ public class BinaryTreeSetTest {
         assertEquals("aa", bts.floor("aa"));
         assertEquals(null, bts.floor("a"));
         assertEquals("aab", bts.floor("b"));
-
     }
 
     @Test
@@ -486,7 +485,6 @@ public class BinaryTreeSetTest {
         assertEquals(false, bts.contains(6));
         assertEquals(false, bts.contains(7));
         assertEquals(false, bts.contains(8));
-
     }
 
     @Test
@@ -512,7 +510,6 @@ public class BinaryTreeSetTest {
         assertEquals(new Integer(5), values.get(4));
         assertEquals(new Integer(3), values.get(5));
         assertEquals(new Integer(2), values.get(6));
-
     }
 
     @Test
@@ -603,8 +600,6 @@ public class BinaryTreeSetTest {
         assertEquals(true, ascSet.isEmpty());
         assertEquals(false, ascSet.contains(3));
         assertEquals(false, ascSet.contains(8));
-
-
     }
 
     /**
@@ -698,9 +693,38 @@ public class BinaryTreeSetTest {
 
         assertEquals(true, bts.remove("tyu"));
         assertEquals(4, bts.size());
-
     }
 
+    @Test
+    public void testCustomComparatorWithNull() {
+        BinaryTreeSet<Integer> bts = new BinaryTreeSet<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer integer, Integer t1) {
+                if (integer == null) {
+                    if (t1 == null) {
+                        return 0;
+                    }
 
+                    return new Integer(0).compareTo(t1);
+                }
 
+                if (t1 == null) {
+                    return integer.compareTo(0);
+                }
+
+                return integer.compareTo(t1);
+            }
+        });
+
+        bts.add(4);
+        bts.add(2);
+        bts.add(5);
+        bts.add(null); // null is treated as 0
+        bts.add(9);
+
+        assertEquals(null, bts.first());
+        assertEquals(null, bts.lower(2));
+        // technically, the following is incorrect, yet expected
+        assertEquals(null, bts.lower(null));
+    }
 }
