@@ -10,8 +10,11 @@ import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -35,30 +38,27 @@ public class MainTest {
      * The resulting file is then deleted.
      */
     @Test
-    public void testMain() {
+    public void testMain() throws IOException, ParseException {
         String[] args = {"src/test/resources/ru/spbau/group202/sharkova/hw5maybe/testfile.txt",
                 "src/test/resources/ru/spbau/group202/sharkova/hw5maybe/outfile.txt"};
         Main.main(args);
 
-        try {
-            String str = readFile(args[1], Charset.defaultCharset());
-            List<String> lines = Arrays.asList(str.split("\n"));
-            assertEquals("16", lines.get(0));
-            assertEquals("1024", lines.get(1));
-            assertEquals("1122.25", lines.get(2));
-            for (int i = 3; i < 8; ++i) {
-                assertEquals("null", lines.get(i));
-            }
-            assertEquals("0", lines.get(8));
-        } catch (IOException e) {
-            fail("Unexpected exception");
-        }
+        String str = readFile(args[1], Charset.defaultCharset());
+        List<String> lines = Arrays.asList(str.split("\n"));
+        assertEquals("16", lines.get(0).trim());
+        assertEquals("1024", lines.get(1).trim());
 
-        try {
-            Files.deleteIfExists(Paths.get(args[1]));
-        } catch (IOException e) {
-            fail("Unexpected exception");
+
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+        Number number = format.parse(lines.get(2).trim());
+        Double d = number.doubleValue();
+        assertEquals(new Double(1122.25), d);
+        for (int i = 3; i < 8; ++i) {
+            assertEquals("null", lines.get(i).trim());
         }
+        assertEquals("0", lines.get(8).trim());
+
+        Files.deleteIfExists(Paths.get(args[1]));
     }
 
     /**

@@ -63,6 +63,7 @@ public class Maybe<T> {
      * @return Maybe object with a modified value
      * */
     @NotNull
+    @SuppressWarnings("unchecked")
     public <U> Maybe<U> map(@NotNull Function<T, U> mapper) {
         /*
          * If mapper is null (which should not happen)
@@ -77,8 +78,8 @@ public class Maybe<T> {
             throw new IllegalArgumentException("Null mapper function provided");
         }
 
-        if (data == null) {
-            return nothing();
+        if (!isPresent()) {
+            return (Maybe<U>) this;
         }
 
         return just(mapper.apply(data));

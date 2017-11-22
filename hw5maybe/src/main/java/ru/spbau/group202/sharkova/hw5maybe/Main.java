@@ -35,13 +35,13 @@ public class Main {
     @NotNull
     private static Number multiplyNumbers(@NotNull Number a, @NotNull Number b) {
         if (a instanceof Double || b instanceof Double) {
-            return new Double(a.doubleValue() * b.doubleValue());
+            return a.doubleValue() * b.doubleValue();
         } else if(a instanceof Float || b instanceof Float) {
-            return new Float(a.floatValue() * b.floatValue());
+            return a.floatValue() * b.floatValue();
         } else if(a instanceof Long || b instanceof Long) {
-            return new Long(a.longValue() * b.longValue());
+            return a.longValue() * b.longValue();
         } else {
-            return new Integer(a.intValue() * b.intValue());
+            return a.intValue() * b.intValue();
         }
     }
 
