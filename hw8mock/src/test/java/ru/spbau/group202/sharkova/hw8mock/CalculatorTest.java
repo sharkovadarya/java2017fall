@@ -10,9 +10,18 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * This test class checks correctness of the Calculator class methods
+ * using a mock object imitating a stack.
+ * All methods not only check correctness of the result,
+ * but also correctness of the order of performed operations.
+ */
 public class CalculatorTest {
-
+    
+    /**
+     * This test checks correctness of calculations of a basic expression
+     * consisting of a binary operation and its two arguments.
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testBasicAddition() {
@@ -43,6 +52,10 @@ public class CalculatorTest {
         inOrder.verify(stack).isEmpty();
     }
 
+    /**
+     * This test checks correctness of calculations of an expression
+     * with addition and brackets.
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testAdditionWithBrackets() {
@@ -77,6 +90,10 @@ public class CalculatorTest {
         inOrder.verify(stack).isEmpty();
     }
 
+    /**
+     * This test checks correctness of evaluation of an expression 
+     * with double numbers, brackets and all supported operations.
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void testEvaluateAllSupportedOperations() {
@@ -136,5 +153,4 @@ public class CalculatorTest {
         inOrder.verify(stack).pop();
         inOrder.verify(stack).isEmpty();
     }
-
 }
