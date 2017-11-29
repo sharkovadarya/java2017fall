@@ -29,8 +29,9 @@ public class CalculationUtilities {
      * This method returns the operation priority.
      * @param operation operation which priority is to be evaluated.
      * @return operation priority.
+     * @throws IllegalArgumentException if the operation is not supported
      */
-    public static int getPrecedence(String operation) {
+    public static int getPrecedence(String operation) throws IllegalArgumentException {
         if (!isProcessableOperation(operation)) {
             throw new IllegalArgumentException("Illegal operation.");
         }
@@ -53,11 +54,13 @@ public class CalculationUtilities {
      * @param firstArgument first operation argument
      * @param secondArgument second operation argument
      * @param operation binary operation to be applied
-     * @return result of operation application
+     * @return result of operation application     
+     * @throws IllegalArgumentException if the operation is not supported
      */
     public static Double processOperation(Double firstArgument,
                                           Double secondArgument,
-                                          String operation) {
+                                          String operation)  
+                         throws IllegalArgumentException  {
 
          switch (operation) {
              case "+": return firstArgument + secondArgument;
