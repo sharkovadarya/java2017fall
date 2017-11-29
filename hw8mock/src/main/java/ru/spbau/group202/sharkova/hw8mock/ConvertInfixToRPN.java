@@ -14,10 +14,11 @@ public class ConvertInfixToRPN {
      * This method parses given tokens
      * representing an expression in infix notation
      * and converts them to reverse Polish notation.
-     * @param infixNotation infix notation expression tokens
-     * @return reverse Polish notation expression tokens
+     * @param infixNotation infix notation expression tokens.
+     * @return reverse Polish notation expression tokens.     
+     * @throws IllegalArgumentException if the expression is malformed.
      */
-    private static List<String> convertInfixToRPN(String[] infixNotation) {
+    private static List<String> convertInfixToRPN(String[] infixNotation) throws IllegalArgumentException {
 
         Stack<String> S = new Stack<>();
         ArrayList<String> expression = new ArrayList<>();
@@ -39,7 +40,8 @@ public class ConvertInfixToRPN {
 
             // The symbol represents an operation.
             if (CalculationUtilities.isProcessableOperation(token)) {
-                while (!S.isEmpty() && CalculationUtilities.getPrecedence(token) <= CalculationUtilities.getPrecedence(S.peek())) {
+                while (!S.isEmpty() && CalculationUtilities.getPrecedence(token) 
+                       <= CalculationUtilities.getPrecedence(S.peek())) {
                     String str = S.pop();
                     expression.add(str);
                 }
@@ -66,10 +68,11 @@ public class ConvertInfixToRPN {
     /**
      * This method parses a given infix notation expression in string format
      * and return a list of tokens in reverse Polish notation.
-     * @param expression expression in infix notation
-     * @return list of tokens in reverse Polish notation
-     * */
-    public static List<String> convertToRPN(String expression) {
+     * @param expression expression in infix notation.
+     * @return list of tokens in reverse Polish notation.
+     * @throws IllegalArgumentException if the expression is malformed.     
+     */
+    public static List<String> convertToRPN(String expression) throws IllegalArgumentExpression {
         String[] splitString = expression.split(" ");
         ArrayList<String> splitStringToInfixNotation = new ArrayList<>();
         for (String s : splitString) {
@@ -98,21 +101,6 @@ public class ConvertInfixToRPN {
             while (j++ != s.length()) {
                 splitStringToInfixNotation.add(")");
             }
-
-            /*if (s.charAt(0) == '(' && s.length() > 1) {
-                splitStringToInfixNotation.add("(");
-                if (s.charAt(s.length() - 1) == ')') {
-                    splitStringToInfixNotation.add(s.substring(1, s.length() - 1));
-                    splitStringToInfixNotation.add(")");
-                } else {
-                    splitStringToInfixNotation.add(s.substring(1));
-                }
-            } else if (s.charAt(s.length() - 1) == ')' && s.length() > 1) {
-                splitStringToInfixNotation.add(s.substring(0, s.length() - 1));
-                splitStringToInfixNotation.add(")");
-            } else {
-                splitStringToInfixNotation.add(s);
-            }*/
         }
         
         String[] infixNotation = new String[splitStringToInfixNotation.size()];
