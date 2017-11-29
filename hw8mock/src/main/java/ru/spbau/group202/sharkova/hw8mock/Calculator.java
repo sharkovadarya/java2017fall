@@ -25,9 +25,10 @@ public class Calculator {
     /**
      * This method evaluates the given expression.
      * @param expression list of tokens representing the expression
-     * @return result of the expression evaluation
+     * @return result of the expression evaluation     
+     * @throws IllegalArgumentException if the expression is malformed
      */
-    public Double evaluateExpression(List<String> expression) {
+    public Double evaluateExpression(List<String> expression) throws IllegalArgumentException {
         if (expression.size() < 2) {
             throw new IllegalArgumentException("Incorrect expression.");
         }
