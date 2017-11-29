@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * This method checks correctness of utility methods used for calculations.
+ */
 public class CalculationUtilitiesTest {
 
     @Test
@@ -68,7 +71,4 @@ public class CalculationUtilitiesTest {
     public void testProcessIllegalOperation() {
         CalculationUtilities.processOperation(2.0, 3.0, "^");
     }
-
-
-
 }
