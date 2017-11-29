@@ -72,7 +72,7 @@ public class ConvertInfixToRPN {
      * @return list of tokens in reverse Polish notation.
      * @throws IllegalArgumentException if the expression is malformed.     
      */
-    public static List<String> convertToRPN(String expression) throws IllegalArgumentExpression {
+    public static List<String> convertToRPN(String expression) throws IllegalArgumentException {
         String[] splitString = expression.split(" ");
         ArrayList<String> splitStringToInfixNotation = new ArrayList<>();
         for (String s : splitString) {
