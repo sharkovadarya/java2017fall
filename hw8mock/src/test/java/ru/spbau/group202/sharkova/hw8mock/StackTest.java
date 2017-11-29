@@ -5,14 +5,24 @@ import org.junit.experimental.theories.suppliers.TestedOn;
 
 import static org.junit.Assert.*;
 
+/**
+ * This method checks correctness of the Stack class behavior.
+ */
 public class StackTest {
 
+    /**
+     * This method checks correctness of isEmpty() method
+     * on an empty stack.
+     */
     @Test
     public void testEmptyStack() {
         Stack<String> stack = new Stack<>();
         assertEquals(true, stack.isEmpty());
     }
 
+    /**
+     * This method checks correctness of push() method.
+     */
     @Test
     public void testPush() {
         Stack<String> stack = new Stack<>();
@@ -24,6 +34,9 @@ public class StackTest {
         assertEquals(false, stack.isEmpty());
     }
 
+    /**
+     * This method checks correctness of pop() method.
+     */
     @Test
     public void testPop() {
         Stack<String> stack = new Stack<>();
@@ -34,6 +47,9 @@ public class StackTest {
         assertEquals(true, stack.isEmpty());
     }
 
+    /**
+     * This method checks correctess of peek() method.
+     */
     @Test
     public void testPeek() {
         Stack<String> stack = new Stack<>();
@@ -62,5 +78,4 @@ public class StackTest {
         assertEquals("a", stack.pop());
         assertEquals(true, stack.isEmpty());
     }
-
 }
