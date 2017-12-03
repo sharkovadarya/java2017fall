@@ -24,33 +24,27 @@ import java.util.*;
 public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
                              implements MyTreeSet<T> {
 
-    private int size = 0;
-    private boolean reverse = false;
-    private Node root = null;
-    private Comparator<T> comparator;
+    private BinarySearchTree<T> bst;
 
     /**
      * Custom comparator constructor.
      */
     public BinaryTreeSet(@NotNull Comparator<T> comparator) {
-        this.comparator = comparator;
+        bst = new BinarySearchTree<>(comparator);
     }
 
     /**
      * Default comparator constructor.
      */
     public BinaryTreeSet() {
-        this.comparator = T::compareTo;
+        bst = new BinarySearchTree<>(T::compareTo);
     }
 
     /**
      * Utility constructor used for descendingSet() method.
      */
     private BinaryTreeSet(@NotNull BinaryTreeSet<T> other, boolean reverse) {
-        comparator = other.comparator;
-        root = other.root;
-        size = other.size;
-        this.reverse = reverse ^ other.reverse;
+        bst = new BinarySearchTree<>(other.bst, reverse);
     }
 
 
@@ -67,37 +61,8 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
             return false;
         }
 
-        Node newNode = new Node(data);
-        if (root == null) {
-            root = newNode;
-            size++;
-            return true;
-        }
-
-        Node current = root;
-        Node parent = null;
-
-        while (true) {
-            parent = current;
-            if (comparator.compare(current.data, data) > 0) {
-                current = current.left;
-
-                if (current == null) {
-                    parent.left = newNode;
-                    parent.left.parent = parent;
-                    size++;
-                    return true;
-                }
-            } else {
-                current = current.right;
-                if (current == null) {
-                    parent.right = newNode;
-                    parent.right.parent = parent;
-                    size++;
-                    return true;
-                }
-            }
-        }
+        bst.add(data);
+        return true;
     }
 
 
@@ -111,19 +76,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     @SuppressWarnings("unchecked")
     public boolean contains(final Object data) {
-        Node current = root;
-
-        while (current != null) {
-            if (current.data.equals(data)) {
-                return true;
-            } else if (comparator.compare(current.data, (T) data) < 0) {
-                current = current.right;
-            } else {
-                current = current.left;
-            }
-        }
-
-        return false;
+        return bst.contains(data);
     }
 
     /**
@@ -132,12 +85,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
      */
     @Override
     public T first() {
-        Node current = root;
-        while (left(current, reverse) != null) {
-            current = left(current, reverse);
-        }
-
-        return current.data;
+        return bst.first();
     }
 
     /**
@@ -146,12 +94,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
      */
     @Override
     public T last() {
-        Node current = root;
-        while (right(current, reverse) != null) {
-            current = right(current, reverse);
-        }
-
-        return current.data;
+        return bst.last();
     }
 
     /**
@@ -164,24 +107,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     public T lower(final T t) {
 
-        if (compare(t, first()) <= 0) {
-            return null;
-        }
-
-        T ret = first();
-        Node current = root;
-        while (current != null) {
-            if (compare(current.data, t) < 0) {
-                if (compare(current.data, ret) > 0) {
-                    ret = current.data;
-                }
-                current = right(current, reverse);
-            } else {
-                current = left(current, reverse);
-            }
-        }
-
-        return compare(ret, t) == 0 ? null : ret;
+        return bst.lower(t);
     }
 
     /**
@@ -228,24 +154,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     public T higher(final T t) {
 
-        if (compare(t, last()) >= 0) {
-            return null;
-        }
-
-        T ret = last();
-        Node current = root;
-        while (current != null) {
-            if (compare(current.data, t) > 0) {
-                if (compare(current.data, ret) < 0) {
-                    ret = current.data;
-                }
-                current = left(current, reverse);
-            } else {
-                current = right(current, reverse);
-            }
-        }
-
-        return compare(ret, t) == 0 ? null : ret;
+        return bst.higher(t);
     }
 
     /**
@@ -253,10 +162,11 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
      */
     @Override
     public void clear() {
-        while (size != 0) {
+        while (size() != 0) {
             remove(first());
         }
     }
+
 
     /**
      * This method removes an element from the set by provided value.
@@ -267,95 +177,12 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @SuppressWarnings("unchecked")
     public boolean remove(final Object o) {
 
-        if (root == null) {
+        if (bst.isEmpty() || !contains(o)) {
             return false;
         }
 
-        Node current = root;
-        boolean isLeftChild = false;
-        int cmp = comparator.compare(current.data, (T) o);
-        while (cmp != 0) {
-            if (cmp < 0) {
-                isLeftChild = false;
-                current = current.right;
-            } else {
-                isLeftChild = true;
-                current = current.left;
-            }
-
-            if (current == null) {
-                return false;
-            }
-
-            cmp = comparator.compare(current.data, (T) o);
-        }
-
-
-        Node parent = current.parent;
-
-        // current node has no children
-        if (current.left == null && current.right == null) {
-            if (current == root) {
-                root = null;
-                size--;
-                return true;
-            }
-
-            if (isLeftChild) {
-                parent.left = null;
-            } else {
-                parent.right = null;
-            }
-        // current node doesn't have a right child
-        } else if (current.right == null) {
-            if (current == root) {
-                root = current.left;
-                root.parent = null;
-
-            } else if (isLeftChild) {
-                parent.left = current.left;
-                parent.left.parent = parent;
-            } else {
-                parent.right = current.left;
-                parent.right.parent = parent;
-            }
-        // current node doesn't have a left child
-        } else if (current.left == null) {
-            if (current == root) {
-                root = current.right;
-                root.parent = null;
-            } else if (isLeftChild) {
-                parent.left = current.right;
-                parent.left.parent = parent;
-            } else {
-                parent.right = current.right;
-                parent.right.parent = parent;
-            }
-        // current node has both children
-        } else {
-            Node successor = getSuccessor(current);
-            if (current == root) {
-                root = successor;
-                root.parent = null;
-            } else if (isLeftChild) {
-                parent.left = successor;
-                parent.left.parent = parent;
-            } else {
-                parent.right = successor;
-                parent.right.parent = parent;
-            }
-
-            successor.left = current.left;
-            successor.left.parent = successor;
-            if (successor.right != null) {
-                successor.right.parent = successor;
-            }
-
-        }
-
-        size--;
+        bst.remove(o);
         return true;
-
     }
 
     /**
@@ -366,12 +193,12 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
      */
     @Override
     public boolean removeAll(@NotNull final Collection<?> collection) {
-        int oldSize = size;
+        int oldSize = bst.size();
         for (Object o : collection) {
             remove(o);
         }
 
-        return oldSize != size;
+        return oldSize != size();
     }
 
     /**
@@ -383,7 +210,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     public boolean retainAll(@NotNull final Collection<?> collection) {
 
-        int oldSize = size;
+        int oldSize = bst.size();
 
         for (T t : this) {
             if (!collection.contains(t)) {
@@ -391,7 +218,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
             }
         }
 
-        return oldSize != size;
+        return oldSize != size();
     }
 
     /**
@@ -399,7 +226,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
      */
     @Override
     public int size() {
-        return size;
+        return bst.size();
     }
 
     /**
@@ -411,7 +238,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     public Iterator<T> iterator() {
 
-        return new TreeIterator(root, false);
+        return bst.iterator();
     }
     /**
      * This method returns a set iterator.
@@ -422,7 +249,7 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     @Override
     public Iterator<T> descendingIterator() {
 
-        return new TreeIterator(root, true);
+        return bst.descendingIterator();
     }
 
     /**
@@ -436,145 +263,6 @@ public class BinaryTreeSet<T extends Comparable<T>> extends AbstractSet<T>
     public MyTreeSet<T> descendingSet() {
 
         return new BinaryTreeSet<>(this, true);
-    }
-
-    /*
-     * The following are utility methods used for correct iterating over tree elements
-     * with respect to possible reversed order of the elements
-     */
-
-    private Node left(Node node, boolean reverse) {
-        return reverse ? node.right : node.left;
-    }
-
-    private Node right(Node node, boolean reverse) {
-        return reverse ? node.left : node.right;
-    }
-
-    private int compare(T t1, T t2) {
-        return reverse ? comparator.compare(t2, t1) : comparator.compare(t1, t2);
-    }
-
-    /*
-     * This utility method is used for removal of nodes with two children.
-     * It returns the leftmost child of node right child.
-     */
-    private Node getSuccessor(Node node) {
-        Node successor = null;
-        Node successorParent = null;
-        Node current = node.right;
-
-        while (current != null) {
-            successorParent = successor;
-            successor = current;
-            current = current.left;
-        }
-
-        if (successor != node.right) {
-            successorParent.left = successor.right;
-            successor.right = node.right;
-        }
-
-        return successor;
-    }
-
-
-    /**
-     * This utility class represents a BST node.
-     * It stores data and "pointers"
-     * to its left and right children and parent.
-     */
-    private class Node {
-        private T data;
-        private Node left;
-        private Node right;
-        private Node parent; // only used for traversals
-
-        public Node(T data) {
-            this.data = data;
-            left = null;
-            right = null;
-            parent = null;
-        }
-
-        /*
-         * This class does not have any getters/setters,
-         * as we can access private fields from the outer class anyway.
-         */
-    }
-
-    /**
-     * This utility class implements a set iterator.
-     * Removal by iterator is not supported.
-     */
-    private class TreeIterator implements Iterator<T> {
-
-        private Node next;
-        private boolean reverse = BinaryTreeSet.this.reverse;
-
-        /**
-         * Default constructor with respect to possible reverse order.
-         */
-        public TreeIterator(Node root, boolean reverse) {
-            next = root;
-
-            if (next == null) {
-                return;
-            }
-
-            this.reverse ^= reverse;
-
-            while (left(next, this.reverse) != null) {
-                next = left(next, this.reverse);
-            }
-
-        }
-
-        /**
-         * This method returns the next element in the iteration.
-         */
-        @Override
-        public T next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-
-            Node r = next;
-
-            if (right(next, reverse) != null) {
-                next = right(next, reverse);
-                while (left(next, reverse) != null) {
-                    next = left(next, reverse);
-                }
-
-                return r.data;
-            }
-
-            while (true) {
-                if (next.parent == null) {
-                    next = null;
-
-                    return r.data;
-                }
-
-                if (left(next.parent, reverse) == next) {
-                    next = next.parent;
-
-                    return r.data;
-                }
-
-                next = next.parent;
-            }
-        }
-
-
-        /**
-         * This method checks whether there are more elements in the iteration.
-         */
-        @Override
-        public boolean hasNext() {
-            return next != null;
-        }
     }
 
 }
