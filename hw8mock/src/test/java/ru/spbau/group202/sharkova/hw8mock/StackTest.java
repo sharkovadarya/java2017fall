@@ -78,4 +78,23 @@ public class StackTest {
         assertEquals("a", stack.pop());
         assertEquals(true, stack.isEmpty());
     }
+
+    @Test
+    public void testResize() {
+        Stack<String> stack = new Stack<>();
+        assertEquals(true, stack.isEmpty());
+        for (int i = 0; i < 2048; ++i)
+            stack.push("a");
+        stack.push("ab");
+        stack.push("a");
+        stack.push("abc");
+        assertEquals("abc", stack.peek());
+        assertEquals(false, stack.isEmpty());
+        assertEquals("abc", stack.pop());
+        assertEquals("a", stack.pop());
+        assertEquals("ab", stack.pop());
+        for (int i = 0; i < 2048; ++i)
+            assertEquals("a", stack.pop());
+        assertEquals(true, stack.isEmpty());
+    }
 }

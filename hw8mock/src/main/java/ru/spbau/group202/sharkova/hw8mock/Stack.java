@@ -1,7 +1,5 @@
 package ru.spbau.group202.sharkova.hw8mock;
 
-import java.util.ArrayList;
-
 /**
  * This class implements a stack data structure.
  * Supported operations: push, pop, peek, check for emptiness.
@@ -9,33 +7,39 @@ import java.util.ArrayList;
  */
 public class Stack<T> {
 
-    private ArrayList<T> stack = new ArrayList<>();
+    private int maxSize = 2048;
+    private T[] stack = (T[]) new Object[maxSize];
     private int top = -1;
 
     /**
      * Pushes the given value to the stack.
      */
     public void push(T value) {
-        if (stack.size() <= top + 1) {
-            stack.add(value);
-            top++;
-        } else {
-            stack.set(++top, value);
-        }
+        if (top + 1 == maxSize)
+            resize();
+        stack[++top] = value;
+    }
+
+    private void resize() {
+        T newStack[] = (T[]) new Object[maxSize * 2];
+        for (int i = 0; i < maxSize; ++i)
+            newStack[i] = stack[i];
+        stack = newStack;
+        maxSize *= 2;
     }
 
     /**
      * Extracts the last value in the stack.
      */
     public T pop() {
-        return stack.get(top--);
+        return stack[top--];
     }
 
     /**
      * Returns the last value in the stack without extraction.
      */
     public T peek() {
-        return stack.get(top);
+        return stack[top];
     }
 
     /**
