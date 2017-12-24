@@ -30,8 +30,14 @@ public class Stack<T> {
 
     /**
      * Extracts the last value in the stack.
+     * @throws EmptyStackException if the stack is empty
      */
     public T pop() {
+
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+
         return stack[top--];
     }
 

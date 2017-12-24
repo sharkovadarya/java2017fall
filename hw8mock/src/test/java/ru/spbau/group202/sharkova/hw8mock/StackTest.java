@@ -1,7 +1,6 @@
 package ru.spbau.group202.sharkova.hw8mock;
 
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 
 import static org.junit.Assert.*;
 
@@ -96,5 +95,27 @@ public class StackTest {
         for (int i = 0; i < 2048; ++i)
             assertEquals("a", stack.pop());
         assertEquals(true, stack.isEmpty());
+    }
+
+    @Test(expected = EmptyStackException.class)
+    public void testPopEmptyStack() {
+        Stack<Double> stack = new Stack<>();
+        assertEquals(true, stack.isEmpty());
+        Double d = stack.pop();
+    }
+
+    // push elements, pop them all and try to pop some more
+    @Test(expected = EmptyStackException.class)
+    public void testPopEmptyStackAfterRemoval() {
+        Stack<Double> stack = new Stack<>();
+        assertEquals(true, stack.isEmpty());
+        stack.push(30.0);
+        stack.push(11.6);
+        stack.push(3.14);
+        stack.pop();
+        stack.pop();
+        stack.pop();
+        stack.pop();
+        stack.pop();
     }
 }
